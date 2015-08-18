@@ -102,13 +102,18 @@ hr {
 pre {
   overflow: auto;
 }
-code,
+
 kbd,
+code,
 pre,
 samp {
   font-family: monospace, monospace;
   font-size: 1em;
 }
+
+
+
+code{background:#F8F8FF; border:black dashed 1px; padding:6px}​
 button,
 input,
 optgroup,
