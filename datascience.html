@@ -73,7 +73,9 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="post-heading">
-                        <h1>Data Science</h1>
+                        <h1>
+                            Data Science
+                        </h1>
                         <span class="meta">Posted by <a href="#">Neil Seward</a> on May 1, 2015</span>
                     </div>
                 </div>
@@ -89,19 +91,21 @@
                     <p>In between school years, I decided to try out the Data Science specialization offered by John Hopkin's through Coursera. It is a great introductory course offering for someone that wants to get their feet wet in data.</p>
 
                     <p>I took 5 courses over the summer. Each course had unique project that I worked on that introduced me to the R language and the power it has in analytics.</p>
-                    <h2>Getting And Cleaning Data</h2>
+                    <h2>
+                        Getting And Cleaning Data
+                    </h2>
                     <p>This course came right after the introductory R course and was the first real application of r in data analysis. The course project was to get specific means of body activities from a phone accelerometer data.</p>
                     <blockquote>Read the accelerometer data and merge training and test sets.</blockquote>
                     <pre>
                         <code>
 trainData <- read.table("data/train/X_train.txt")
-trainLabel <- read.table("data/train/y_train.txt");
-trainSubject <- read.table("data/train/subject_train.txt");
-testData <- read.table("data/test/X_test.txt");
-testLabel <- read.table("data/test/y_test.txt"); 
-testSubject <- read.table("data/test/subject_test.txt");
+trainLabel <- read.table("data/train/y_train.txt")
+trainSubject <- read.table("data/train/subject_train.txt")
+testData <- read.table("data/test/X_test.txt")
+testLabel <- read.table("data/test/y_test.txt")
+testSubject <- read.table("data/test/subject_test.txt")
 
-data <- rbind(trainData, testData);
+data <- rbind(trainData, testData)
 label <- rbind(trainLabel, testLabel)
 subject <- rbind(trainSubject, testSubject)
                         </code>
@@ -111,14 +115,14 @@ subject <- rbind(trainSubject, testSubject)
                     </blockquote>
                     <pre>
                         <code>
-features <- read.table("data/features.txt");
-featureLabels <-  grep("-(mean|std)\\(\\)", features[, 2]);
-data <- data[,featureLabels];
+features <- read.table("data/features.txt")
+featureLabels <-  grep("-(mean|std)\\(\\)", features[, 2])
+data <- data[,featureLabels]
 
-names(data) <- features[featureLabels,2];
+names(data) <- features[featureLabels,2]
   
-activity <- read.table("data/activity_labels.txt");
-label[, 1] <- activity[label[,1],2];
+activity <- read.table("data/activity_labels.txt")
+label[, 1] <- activity[label[,1],2]
                         </code>
                     </pre>
                     <blockquote>
@@ -126,16 +130,171 @@ label[, 1] <- activity[label[,1],2];
                     </blockquote>
                     <pre>
                         <code>
-names(label) <- "activity";
-names(subject) <- "subject";
+names(label) <- "activity"
+names(subject) <- "subject"
   
-dataSet <- cbind(data,label,subject);
-averageData <- ddply(dataSet, .(subject,activity),function(x) colMeans(x[,1:66]));
+dataSet <- cbind(data,label,subject)
+averageData <- ddply(dataSet, .(subject,activity),function(x) colMeans(x[,1:66]))
 
-write.table(averageData,"averageData.txt",row.name=FALSE);
+write.table(averageData,"averageData.txt",row.name=FALSE)
                         </code>
                     </pre>
+                    <h2>
+                        Exploratory Data Analysis
+                    </h2>
+                    <p>This course taught what can be represented with the data. The asignment shown involved creating several different representations of emmisions data to anwer basic questions on whether emission were increasing in different areas.</p>
+                    <p>Question: Have total emissions from PM2.5 decreased from 1999 to 2008?</p>
+                    <blockquote>
+                        Read data, aggregate emission sums by year, and plot a histogram of the sums.
+                    </blockquote>
+                    <pre>
+                        <code>
+NEI <- readRDS("summarySCC_PM25.rds")
+    
+emissionsPerYear <- aggregate(NEI$Emissions,by=list(NEI$year),FUN=sum)
+  
+png(filename = "plot1.png", width=480,height=480)
+plot(emissionsPerYear$Group.1, emissionsPerYear$x, xlab="Year", ylab="Total Emissions(tons)", 
+main = "Emissions By Year",type='l')
+dev.off()
+                        </code>
+                    </pre>
+                    <img src="https://raw.githubusercontent.com/sealneaward/ExploratoryDataAnalysis/master/Assignment2/plot1.png"/>
+                    <p>
+                        Question: Have total emissions from PM2.5 decreased from 1999 to 2008 in Baltimore?
+                    </p>
+                    <blockquote>
+                        Read data, subset to Baltimore area zip code, aggregate sums and plot histogram.
+                    </blockquote>
+                    <pre>
+                        <code>
+NEI <- readRDS("summarySCC_PM25.rds")
+    
+Baltimore <- subset(NEI,NEI$fips=="24510")    
+emissionsPerYear <- aggregate(Baltimore$Emissions,by=list(Baltimore$year),FUN=sum)
+  
+png(filename = "plot2.png", width=480,height=480)
+plot(emissionsPerYear$Group.1, emissionsPerYear$x, xlab="Year", ylab="Total Emissions(tons)",main = "Baltimore Emissions By Year", type='l')
+dev.off()
+                        </code>
+                    </pre>
+                    <img src="https://raw.githubusercontent.com/sealneaward/ExploratoryDataAnalysis/master/Assignment2/plot2.png"/>
+                     <p>
+                        Question: Have four types of emission sources from PM2.5 decreased from 1999 to 2008 in Baltimore?
+                    </p>
+                    <blockquote>
+                        Read data, subset to Baltimore area zip code, aggregate each year in each type and plot four histograms using ggplot package.
+                    </blockquote>
+                    <pre>
+                        <code>
+NEI <- readRDS("summarySCC_PM25.rds")
+    
+Baltimore <- subset(NEI,NEI$fips=="24510")    
+emissionsPerYearPerType <- aggregate(Emissions ~ year, Baltimore,sum)
+  
+png(filename = "plot3.png", width=480,height=480)
+plot <- ggplot(Baltimore,aes(factor(year),Emissions,fill=type)) +
+geom_bar(stat="identity") +
+theme_bw() + guides(fill=FALSE)+
+facet_grid(.~type,scales = "free",space="free") + 
+labs(x="year", y=expression("Total PM"[2.5]*" Emission In Tonnes")) + 
+labs(title=expression("PM"[2.5]*" Emissions, Baltimore City 1999-2008 by Source Type"))
+  
+print(plot)
+dev.off()
+                        </code>
+                    </pre>
+                    <img src="https://raw.githubusercontent.com/sealneaward/ExploratoryDataAnalysis/master/Assignment2/plot3.png"/>
+                    <p>
+                        Question: What are the emissions trends in the US from 99-08 for coal combustion?
+                    </p>
+                    <blockquote>
+                        Read data, subset to only contain coal and combustion data using grepl, plot by factor using ggplot package.
+                    </blockquote>
+                    <pre>
+                        <code>
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+    
+allCombustion <- grepl("comb", SCC$SCC.Level.One, ignore.case=TRUE)
+allCoal <- grepl("coal", SCC$SCC.Level.Four, ignore.case=TRUE)
+coalCombustion <- (allCoal & allCombustion)
+
+combustionSCC <- SCC[coalCombustion,]$SCC
+combustionNEI <- NEI[NEI$SCC %in% combustionSCC,]
+  
+png("plot4.png",width=480,height=480)
+plot <- ggplot(combustionNEI,aes(factor(year),Emissions/10^5)) +
+geom_bar(stat="identity",fill="grey",width=0.75) +
+theme_bw() +  guides(fill=FALSE) +
+labs(x="year", y=expression("Total PM"[2.5]*" Emission (10^5 Tons)")) + 
+labs(title=expression("PM"[2.5]*" Coal Combustion Emissions In The US from 99-08"))
+  
+print(plot)
+dev.off()
+                        </code>
+                    </pre>
+                    <img src="https://raw.githubusercontent.com/sealneaward/ExploratoryDataAnalysis/master/Assignment2/plot4.png"/>
+                    <p>
+                        Question: What are the vehicle emission trends in Baltimore from 99-08?
+                    </p>
+                    <blockquote>
+                        Read data, subset to only contain vehicle data using grepl and in Baltimore zip, plot by year factor using ggplot package.
+                    </blockquote>
+                    <pre>
+                        <code>
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+    
+vehicle <- grepl("vehicle", SCC$SCC.Level.Two, ignore.case=TRUE)
+vehicleSCC <- SCC[vehicle,]$SCC
+vehicleNEI <- NEI[NEI$SCC %in% vehicleSCC,]
+
+Baltimore<-subset(vehicleNEI,vehicleNEI$fips=="24510")
+  
+png("plot5.png",width=480,height=480)
+plot <- ggplot(Baltimore,aes(factor(year),Emissions)) + geom_bar(stat="identity",fill="grey",width=0.75) +
+theme_bw() +  guides(fill=FALSE) + labs(x="year", y=expression("Total PM"[2.5]*" Emission (10^5 Tons)")) + 
+labs(title=expression("PM"[2.5]*" Vehicle Emissions in Baltimore From 99-08"))
+  
+print(plot)
+dev.off()
+                        </code>
+                    </pre>
+                    <img src="https://raw.githubusercontent.com/sealneaward/ExploratoryDataAnalysis/master/Assignment2/plot5.png"/>
+                    <p>
+                        Question: What are the vehicle emission trends in Baltimore and LA from 99-08?
+                    </p>
+                    <blockquote>
+                        Read data, subset to only contain vehicle data using grepl and in Baltimore and Los Angeles zip, plot by year factor using ggplot package.
+                    </blockquote>
+                    <pre>
+                        <code>
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+    
+vehicle <- grepl("vehicle", SCC$SCC.Level.Two, ignore.case=TRUE)
+vehicleSCC <- SCC[vehicle,]$SCC
+vehicleNEI <- NEI[NEI$SCC %in% vehicleSCC,]
+
+Baltimore <- subset(vehicleNEI,vehicleNEI$fips=="24510")
+LosAngeles <- subset(vehicleNEI,vehicleNEI$fips=="06037")
+cities <- rbind(Baltimore,LosAngeles)
+  
+png("plot6.png",width=480,height=480)
+plot <- ggplot(cities,aes(x=factor(year), y=Emissions, fill=city)) 
++ geom_bar(aes(fill=year),stat="identity") +
+facet_grid(scales="free", space="free", .~city) + theme_bw() +  
+guides(fill=FALSE) + labs(x="year", y=expression("Total PM"[2.5]*" Emission (10^5 Tons)")) + 
+labs(title=expression("PM"[2.5]*" Vehicle Emissions in Baltimore and Los Angeles From 99-08"))
+  
+print(plot)
+dev.off()
+                        </code>
+                    </pre>
+                    <img src="https://raw.githubusercontent.com/sealneaward/ExploratoryDataAnalysis/master/Assignment2/plot6.png"/>
                 </div>
+
             </div>
         </div>
     </article>
