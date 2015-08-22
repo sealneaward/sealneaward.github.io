@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Clean Blog - Sample Post</title>
+    <title>Neil Seward - Third Year</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -44,7 +44,6 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">Start Bootstrap</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -55,9 +54,6 @@
                     </li>
                     <li>
                         <a href="about.html">About</a>
-                    </li>
-                    <li>
-                        <a href="post.html">Sample Post</a>
                     </li>
                     <li>
                         <a href="contact.html">Contact</a>
@@ -71,14 +67,13 @@
 
     <!-- Page Header -->
     <!-- Set your background image for this header on the line below. -->
-    <header class="intro-header" style="background-image: url('img/post-bg.jpg')">
+    <header class="intro-header" style="background-image: url('img/ty-bg.jpg')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="post-heading">
-                        <h1>Man must explore, and this is exploration at its greatest</h1>
-                        <h2 class="subheading">Problems look mighty small from 150 miles up</h2>
-                        <span class="meta">Posted by <a href="#">Start Bootstrap</a> on August 24, 2014</span>
+                        <h1>Third Year</h1>
+                        <span class="meta">Posted by <a href="#">Neil Seward</a> on April 17, 2015</span>
                     </div>
                 </div>
             </div>
@@ -90,40 +85,49 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <p>Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman's earth, if free men make it, will be truly round: a globe in practice, not in theory.</p>
+                    <p>Third year was definitely very tough initially going in. The topics covered were very foreign at the time and, often for the most difficult courses, I was lectured by uninterested profs that had poor teaching methods. Operating systems was particularly hard in that the first half of the course was taught in C. Learning child process creation with a language never really used in your program that has weak debugging methods isn't always the most fun. Languages and Compilers was definitely the hardest, but it was the most rewarding. At the beginning of the class, I had no clue about anything that went on behind compilers and how basic text was converted into language readable objects and then ultimately to machine code. Ultimately at the end, I was able to make a Java based, Pascal arithmetic like compiler that evaluated simple addition, mutliplication, sin comutations along with other variations. </p>
 
-                    <p>Science cuts two ways, of course; its products can be used for both good and evil. But there's no turning back from science. The early warnings about technological dangers also come from science.</p>
+                    <h2 class="section-heading">Artificial Intelligence</h2>
 
-                    <p>What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.</p>
+                    <p>I loved this course. The professor who taught this course was actually very excited to teach us about the different advanced algorithms used in the field such as A*, Breadth, Best First, and Depth First.</p>
 
-                    <p>A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That's how I felt seeing the Earth for the first time. I could not help but love and cherish her.</p>
+                    <p>What really intrigued me were the last few chapters taught in this course on machine learning. The professor introduced classification trees and clustering algorithms like K-Nearest Neighbour. Those were some of the most interesting lectures that I've been to so far at school.</p>
 
-                    <p>For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.</p>
+                    <h3>Mancala</h3>
+                    <a href="https://github.com/sealneaward/Mancala" >Repository</a>
+                    <br/>
+                    <a href="http://www.instructables.com/id/How-to-play-MANCALA/">Read the rules of Mancala</a>
+                    <p>This assignment didn't require the use of any method or algorithms taught in the class. I regret not putting the time into this project. I developed a solution around the techniques I learned playing an AI players on Mancala and now looking back, it would not have been hard to make a classification model from all the possible outcomes from the game logic.</p>
+                    
+                   <h2 class="section-heading">Database Management</h2>
 
-                    <h2 class="section-heading">The Final Frontier</h2>
+                    <p>This course introduced the fundamentals of creating a database, making views, making stored procedures, and database design.</p>
 
-                    <p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
+                    <h3>LiveTraffic</h3>
+                    <a href="https://github.com/sealneaward/LiveTraffic">Repository</a>
+                    <p>Our group designed a really cool live traffic and incident display using two overlapping API for the display and incident data. Google Maps API provided an easy platform to grid the different traffic incidents in the Greater Toronto Area received from the HERE Maps API.</p>
+                    <p>We designed our backend with PHP because it looked more easily learned than Node.js at the moment. Our entire group first experienced server side programming and getting JSON responses from a web service.</p>
+                    <p>The main goal of the project was to fill the database with data gotten from an API and display that information in the form of views. Another requirement was to provide some sort of API service to get JSON responses from the database for outside use.</p>
+                    <p>Our group decided to go beyond the initial requirements and thought it would be cool to show exact areas that have had a large amount of traffic incidents in the past. We implemented this idea by using a simple geo range query to find incidents that have a certain threshold of incidents within a boxed area around them. Because we only got data on incidents over a few days, there was not a noticible amount of correlation in any areas in Toronto.</p>
 
-                    <p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
 
-                    <blockquote>The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.</blockquote>
+                    <h2 class="section-heading">Operating Systems</h2>
 
-                    <p>Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.</p>
+                    <p>This course introduced the fundamentals of creating a shell, process management, and creating a functional unix file system. The majority of the course was taught using ANTLR.</p>
 
-                    <h2 class="section-heading">Reaching for the Stars</h2>
+                    <h3>FileSystemJava</h3>
+                    <a href="https://github.com/sealneaward/FileSystemJava">Repository</a>
+                    <p>This project was very interesting and helped me understand the complexity behind file management and the different processes that go on when a file is read from disk and when it is converted back to the disk.</p>
 
-                    <p>As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.</p>
+                    <h2 class="section-heading">Languages and Compilers</h2>
 
-                    <a href="#">
-                        <img class="img-responsive" src="img/post-sample-image.jpg" alt="">
-                    </a>
-                    <span class="caption text-muted">To go places and do things that have never been done before – that’s what living is all about.</span>
+                    <p>This course introduced the fundamentals of creating a shell, process management, and creating a functional unix file system.</p>
 
-                    <p>Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.</p>
+                    <h3>LanguagesAndCompilers</h3>
+                    <a href="https://github.com/sealneaward/LanguagesAndCompilers">Repository</a>
+                    <p>These assignments were necessary for me to understand the different tasks done in compilers and what is done by a compiler to convert code to machine code.</p>
+                    <p>I was very interesting to learn how to create a compiler and the different parts that are inside of one. I was very proud to make a small pascal like calculation language with java dependencies. The work and the logic was very hard to interpret, but I accomplished something great in a field I will most likely never get to explore much.</p>
 
-                    <p>As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.</p>
-
-                    <p>Placeholder text by <a href="http://spaceipsum.com/">Space Ipsum</a>. Photographs by <a href="https://www.flickr.com/photos/nasacommons/">NASA on The Commons</a>.</p>
                 </div>
             </div>
         </div>
@@ -132,13 +136,13 @@
     <hr>
 
     <!-- Footer -->
-    <footer>
-        <div class="container">
+     <footer>
+       <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <ul class="list-inline text-center">
                         <li>
-                            <a href="#">
+                            <a href="https://twitter.com/sealneaward">
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-circle fa-stack-2x"></i>
                                     <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
@@ -146,7 +150,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="https://www.facebook.com/neil.m.seward">
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-circle fa-stack-2x"></i>
                                     <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
@@ -154,7 +158,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="https://github.com/sealneaward">
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-circle fa-stack-2x"></i>
                                     <i class="fa fa-github fa-stack-1x fa-inverse"></i>
@@ -162,10 +166,10 @@
                             </a>
                         </li>
                     </ul>
-                    <p class="copyright text-muted">Copyright &copy; Your Website 2014</p>
                 </div>
             </div>
         </div>
+         
     </footer>
 
     <!-- jQuery -->
