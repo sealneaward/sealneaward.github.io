@@ -97,7 +97,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <p>Ever since firt year, I've alway been intrigued with prediction. I wrote a couple short papers on prediction in some of my first year communication courses and studied the possible impact that artificial intelligence can have on society.</p>
+                    <p>Ever since first year, I've alway been intrigued with prediction. I wrote a couple short papers on prediction in some of my first year communication courses and studied the possible impact that artificial intelligence can have on society.</p>
 
                     <p>Naturally, I was super excited to start doing the Practical Machine Learning course online. It introduced me to training vs test sets. It taught me how to partition data based on the size of data given. The course introduced applications of classification trees and other different predictive models.</p>
 
@@ -161,8 +161,12 @@ pml.testing$classe &lt;- classe</code></pre>
 <pre><code>## [1] 19622    53</code></pre>
 <pre class="r"><code>print(dim(pml.testing))</code></pre>
 <pre><code>## [1] 20 52</code></pre>
-<p>Now to create the partition for training the model and testing it’s accuracy. I chose a 80:20 split for training and testing/evaluation.</p>
-<p>I needed to create a factor for all the different classes in the data set for the training for the classification. Using randomForest for training, there was no need for cross validation. The entire cleaning, training, and prediction process took approximately 35 seconds.</p>
+<p>Now to create the partition for training the model and testing it’s accuracy. I chose a 80:20 split for training and cross validation.</p>
+<pre class="r"><code>set.seed(1234)
+inTrain <- createDataPartition(pml.training$classe, p=0.8, list = FALSE)
+training <- pml.training[inTrain,]
+testing <- pml.training[-inTrain,] </code></pre>
+<p>I needed to create a factor for all the different classes in the data set for the training for the classification. Using randomForest for training a classification model, the creation of the model was simple and quick. The entire cleaning, training, and prediction process took approximately 35 seconds.</p>
 <pre class="r"><code>classe &lt;- as.factor(classe)
 
 modFit &lt;- randomForest(classe ~. , data=training)
