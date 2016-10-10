@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+
+      th, td {
+          padding: 5px;
+          border: 1px solid black;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# MapReduce
+
+---
+
+# MapReduce: Simplified Data Processing on Large Clusters
+### Authors: Jeffrey Dean, Sanjay Ghemawat
+### Presenter: Neil Seward
+
+---
+
+# Contents
+
+1. Defining Google's Problem
+2. The MapReduce Model
+3. Implementation of MapReduce
+4. Fault Tolerance
+5. Additions to the MapReduce Model
+6. Evaluating Performance
+7. Conclusions and Related Work
+
+---
+
+# Defining Google's Problem
+- Google needed a new method to work with all of their indexed data.
+
+![data](http://blog.mindjet.com/wp-content/uploads/2011/12/Drowing-in-Data.jpg)
+
+---
+
+# Defining Google's Problem
+- The new searching algorithm need to work across a distributed set of thousands of computers
+- These networked computers were considered to be mid-low tier in processing power.
+
+---
+
+# Defining Google's Problem
+- The algorithm needed to be relatively simple to implement and understand, but still incorporate for fault tolerance, network bandwith, and other complex issues with data processing
+
+---
+
+# The MapReduce Model
+- The MapReduce algorithm takes in a set of key/value pairs as input and produces a different set of key/value pairs as output.
+
+Key  | Value
+------------- | -------------
+0  | Banana
+1  | Banana
+
+
+
+
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
