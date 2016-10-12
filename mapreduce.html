@@ -44,7 +44,7 @@ class: center, middle
 4. Fault Tolerance
 5. Additions to the MapReduce Model
 6. Evaluating Performance
-7. Conclusions and Related Work
+7. Conclusions
 
 ---
 
@@ -135,7 +135,7 @@ Banana | 1
 
 # The MapReduce Model
 
-## Map Example
+## Reduce Example
 ### Input
 
 Key  | Value
@@ -178,6 +178,27 @@ Banana | 2
 ---
 
 # MapReduce Implementation
+### Specifying Size
+
+- Mapping tasks are divided up into M segments of input data. This is used to optimize the size of the input data.
+
+- Reduce tasks are partitioned up into R tasks. This is used to optimize the size of the output files.
+<br>
+<br>
+
+```
+Example: This paper used
+
+M = 200,000
+R = 5,000
+
+On a network with 2,000 machines to get input data split to sizes of between 16MB to 64MB.
+```
+
+
+---
+
+# MapReduce Implementation
 
 ### Splitting
 - The MapReduce library will first split the input files into smaller subsets.
@@ -191,10 +212,7 @@ Banana | 2
 # MapReduce Implementation
 
 ### Mapping
-- Each worker assigned to mapping will read a subset input file and map intermediate key/value pairs.
-<br>
-<br>
-- Once mapped, these pairs are written as buffers into memory.
+- Each worker assigned to mapping will read a subset input file and Map intermediate key/value pairs.
 <br>
 <br>
 <img src="img/mapping-step.png" style="width: 400px; height: 300px"/>
@@ -202,9 +220,341 @@ Banana | 2
 
 ---
 
+# MapReduce Implementation
+
+### Mapping
+- Once mapped, these pairs are written as buffers into local disk storage.
+<br>
+<br>
+- The locations of these buffered pairs are stored in the master and are passed to the Reduce workers.
+<br>
+<br>
+<img src="img/map-to-file.png" style="width: 350px; height: 300px"/>
+
+---
+
+# MapReduce Implementation
+
+### Shuffling
+- The Reduce workers read the pairs from disk and sort the pairs.
+<br>
+<br>
+- The sorting operation groups together the same keys, as Reduce workers often get multiple different keys assigned to them.
+<br>
+<br>
+<img src="img/shuffle-step.png" style="width: 330px; height: 300px"/>
+[1]
+
+---
+
+# MapReduce Implementation
+
+### Reducing
+- The Reduce workers read the pairs from disk and sort the pairs.
+<br>
+<br>
+<img src="img/reduce-step.png" style="width: 330px; height: 300px"/>
+[1]
+
+---
+
+# MapReduce Implementation
+
+### Reducing
+- Once sorted, the Reduce workers perform the Reduce function and write the output pairs to output files.
+<br>
+<br>
+<img src="img/reduce-to-file.png" style="width: 330px; height: 300px"/>
+
+---
+
+# MapReduce Implementation
+
+### Output
+- After appending to output files, the Reduce workers signal the master component for completion.
+<br>
+<br>
+- The master component then notifies the use program of completion, returning the results.
+<br>
+<br>
+<img src="img/final-step.png" style="width: 300px; height: 270px"/>
+[1]
+
+---
+
+# Fault Tolerance
+
+The MapReduce library has many mechanisms that handle failure in operations and also handle hanging processes.
+
+Some failures and bottlenecks that are handled by the library include:
+- Worker failure
+- Master failure
+- Slow network bandwidth
+- Straggler tasks
+
+---
+
+# Fault Tolerance
+### Execution States
+The master component tracks the status of each Map and Reduce worker throughout the execution of the functions.
+<br>
+<br>
+These states include:
+- idle
+- in-progress
+- completed
+
+Depending on these worker states and the time that the worker stays in the state, different fault tolerance mechanisms are implemented.
+
+
+---
+
+# Fault Tolerance
+### Worker Failure
+- If stuck in the same state for too long, the master resets the worker back to idle.
+
+---
+
+# Fault Tolerance
+### Worker Failure - Map
+- When a Map worker is determined to be in a failed state, the master resets the worker back to idle.
+
+- The output from the Map worker is stored locally and cannot be accessed by the master, so the Map tasks are re-scheduled on another worker.
+
+---
+
+# Fault Tolerance
+### Worker Failure - Map
+- Due to the large numbers of workers, tasks can be re-scheduled with ease.
+<br>
+<br>
+<img src="img/reschedule-fault.png" style="width: 500px; height: 350px"/>
+
+---
+
+# Fault Tolerance
+### Worker Failure - Reduce
+- When Reduce workers fail, they are not re-scheduled due to their output being globally accessible.
+
+
+
+---
+
+# Fault Tolerance
+### Master Failure
+- The master component is central to the execution of the MapReduce program.
+
+- There are no copies of the master component.
+
+- When in failed state, the master is aborted and the client program is notified.
+
+---
+
+# Fault Tolerance
+### Network Bandwidth
+- The MapReduce model is robust in that it can still perform the function operation on a network with low bandwidth.
+
+- The input files for the workers are initially stored as copies across the cluster of computers.
+---
+
+# Fault Tolerance
+### Network Bandwidth - Locality
+
+- When a worker fails, the master re-schedules jobs based on the closest machine that has a copy of the original worker data.
+
+- If no machine has an exact copy, the task is reschedule to the nearest machine with input data that best replicates the original.
+
+
+---
+
+# MapReduce Additions
+### Backup Tasks
+
+- When a worker is taking a long time to complete a Map or a Reduce function while in-progress, the master component considers it a straggler.
+
+- After straggler detection, the master creates backup executions of the in-progress task.
+
+---
+
+# MapReduce Additions
+### Backup Tasks
+
+- The task is determined to be complete when either the backup task or the original task completes the operation.
+<br>
+<br>
+<img src="img/backup-task.png" style="width: 500px; height: 300px"/>
+[2]
+
+---
+
+# MapReduce Additions
+### Partitioning
+
+- When creating inputs for Reduce tasks, a Partition function can be used to evenly distribute partitions.
+
+- Based on the key/value pair from Map tasks, outputs are assigned to partitions during the Shuffling step of MapReduce.
+
+- *f(key) = hash(key)**mod**R*
+
+---
+
+# MapReduce Additions
+### Combining
+
+- After Map tasks are finished, a simple combination can be performed after the Map task on the same worker to simplify the Reduce task load.
+
+- The combination function works similar to the Reduce function.
+<br>
+<br>
+<img src="img/combiner-function.png" style="width: 450px; height: 200px"/>
+
+---
+
+# MapReduce Performance
+### Configuration
+
+- 1800 machines on network.
+- Two 2GHz Xeon CPUs.
+- 4GB RAM.
+- Two 160GB IDE storage.
+- 100-200 Gbps network bandwidth.
+- 1 TB of data.
+
+---
+
+# MapReduce Performance
+### Grep - Summary
+
+- Searches through data for rare three letter combinations.
+
+- Input data is split into 64MB peices (M = 15,000).
+
+- Output data is single file (R = 1).
+
+---
+
+# MapReduce Performance
+### Grep - Performance
+
+
+- The entire computation takes 150 seconds (including 60 seconds of startup).
+
+
+<img src="img/data-rate.png" style="width: 500px; height: 300px"/>
+
+---
+
+# MapReduce Performance
+### Sort - Summary
+
+- Sorts data based on extracted keys from data.
+
+- Input data is split into 64MB peices (M = 15,000).
+
+- Output data is written to 4000 files (R = 4000).
+
+---
+
+# MapReduce Performance
+### Sort - Performance (Normal, Input Rate)
+- This graph shows the rate at which the data is read from input.
+
+- All of the reading is completed at around 200 seconds in.
+
+<img src="img/data-rate-sort-normal.png" style="width: 500px; height: 300px"/>
+
+---
+
+# MapReduce Performance
+### Sort - Performance (Normal, Network Transfer Rate)
+- This graph shows the rate at which the data is transfered from the Map phase to the Reduce phase.
+
+- This happens specifically during the shuffling/partitioning phase.
+
+- All of the data is transfered at around 600 seconds in.
+
+<img src="img/network-rate-sort-normal.png" style="width: 500px; height: 270px"/>
+
+---
+
+# MapReduce Performance
+### Sort - Performance (Normal, Output Rate)
+- This graph shows the rate at which the data is written to the output files.
+
+- All of the data is written at around 850 seconds in.
+
+- With startup, this version of sort takes 891 seconds.
+
+<img src="img/output-rate-sort-normal.png" style="width: 500px; height: 270px"/>
+
+
+---
+
+# MapReduce Performance
+### Sort - Performance (No Backup, Input Rate)
+
+<img src="img/data-rate-sort-backup.png" style="width: 500px; height: 300px"/>
+
+---
+
+# MapReduce Performance
+### Sort - Performance (No Backup, Network Transfer Rate)
+
+<img src="img/network-rate-sort-backup.png" style="width: 500px; height: 270px"/>
+
+---
+
+# MapReduce Performance
+### Sort - Performance (No Backup, Output Rate)
+- Most of the data is written before 960 seconds in.
+
+- Without backup tasks, there are five stragglers that cause the end point to be at 1283 seconds.
+
+<img src="img/output-rate-sort-backup.png" style="width: 500px; height: 270px"/>
+
+
+---
+
+# MapReduce Performance
+### Sort - Performance (200 Task Killed, Input Rate)
+
+- The negative rate is due to information loss during re-scheduling failed tasks.
+
+<img src="img/data-rate-sort-fault.png" style="width: 500px; height: 300px"/>
+
+---
+
+# MapReduce Performance
+### Sort - Performance (200 Task Killed, Network Transfer Rate)
+
+<img src="img/network-rate-sort-fault.png" style="width: 500px; height: 270px"/>
+
+---
+
+# MapReduce Performance
+### Sort - Performance (200 Task Killed, Output Rate)
+- With startup, this configuration of sort completes at 933 seconds in.
+
+<img src="img/output-rate-sort-fault.png" style="width: 500px; height: 270px"/>
+
+
+---
+
+# Conclusions
+- With the MapReduce library, making simple queries on large sets of data in short periods is very easy to implement.
+
+- The additions to the model, such as combining, backup tasks, and network locality make the distributed library even more powerful in terms of processing.
+
+
+
+---
+
+
 # References
 
 1. http://xiaochongzhang.me/blog/wp-content/uploads/2013/05/MapReduce_Work_Structure.png
+
+2. http://images.slideplayer.com/14/4413895/slides/slide_13.jpg
 
 
 
