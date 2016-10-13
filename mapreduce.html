@@ -64,7 +64,13 @@ class: center, middle
 ---
 
 # Defining Google's Problem
-- The algorithm needed to be relatively simple to implement and understand, but still incorporate for fault tolerance, network bandwith, and other complex issues with data processing
+The algorithm needed to be relatively simple to implement and understand, but still incorporate for:
+- fault tolerance
+
+- slow network bandwith
+
+- hanging processes
+
 
 ---
 
@@ -87,10 +93,14 @@ Banana | 2
 ---
 
 # The MapReduce Model
-- The MapReduce algorithm has two main functions: the Map function, and the Reduce function.
+The MapReduce algorithm has two main functions:
+- Map
+
+- Reduce
 <br>
 <br>
-- Both the Map function and the Reduce function can be written differently, depending on the user requirements of the MapReduce function.
+
+Both the Map function and the Reduce function can be written differently, depending on the user requirements of the MapReduce function.
 
 ---
 
@@ -111,8 +121,7 @@ Banana | 2
 
 Key  | Value
 ------------- | -------------
-0  | Banana
-1  | Banana
+words.txt | Banana, Banana
 
 ### Output
 
@@ -162,38 +171,52 @@ Banana | 2
 # MapReduce Implementation
 ### Components
 - The MapReduce model uses two main components to carry out commands and to load files for input and to store output.
-<br>
-<br>
-- **Master**: assigns Map and Reduce tasks to workers, updates worker status, tracks file locations, and handles faults in workers.
-<br>
-<br>
-- **Worker**: performs Map and Reduce tasks, sends updates to master, and performs read and write operations to files.
+
+<img src="img/master-worker.png" style="width: 600px; height: 350px"/>
 
 ---
 
 # MapReduce Implementation
-### Component Structure
-<img src="img/master-worker.png" style="width: 700px; height: 450px"/>
+### Components - Master
+Tasks include:
+ - assign Map and Reduce tasks to workers
+
+ - updates worker status
+
+ - tracks file locations
+
+ - handles faults in workers.
 
 ---
 
 # MapReduce Implementation
-### Specifying Size
+### Components - Worker
 
-- Mapping tasks are divided up into M segments of input data. This is used to optimize the size of the input data.
+Tasks include:
 
-- Reduce tasks are partitioned up into R tasks. This is used to optimize the size of the output files.
-<br>
-<br>
+- performs Map and Reduce tasks
 
-```
-Example: This paper used
+- sends updates to master
 
-M = 200,000
-R = 5,000
+- performs read and write operations to files.
 
-On a network with 2,000 machines to get input data split to sizes of between 16MB to 64MB.
-```
+
+---
+
+# MapReduce Implementation
+### Specifying Size - Mapping
+
+- Mapping tasks are divided up into M segments of input data.
+
+- This is used to optimize the size of the input data.
+
+---
+
+# MapReduce Implementation
+### Specifying Size - Reduce
+
+- Reduce tasks read from R intermediary files produced by the partitioning function.
+
 
 
 ---
@@ -201,7 +224,7 @@ On a network with 2,000 machines to get input data split to sizes of between 16M
 # MapReduce Implementation
 
 ### Splitting
-- The MapReduce library will first split the input files into smaller subsets.
+- The MapReduce library will first split the input files into M smaller subsets.
 <br>
 <br>
 <img allign="left" src="img/splitting-step.png" style="width: 500px; height: 350px"/>
@@ -223,10 +246,7 @@ On a network with 2,000 machines to get input data split to sizes of between 16M
 # MapReduce Implementation
 
 ### Mapping
-- Once mapped, these pairs are written as buffers into local disk storage.
-<br>
-<br>
-- The locations of these buffered pairs are stored in the master and are passed to the Reduce workers.
+- Once mapped, these pairs are written as buffers into memory to be sorted.
 <br>
 <br>
 <img src="img/map-to-file.png" style="width: 350px; height: 300px"/>
@@ -236,13 +256,12 @@ On a network with 2,000 machines to get input data split to sizes of between 16M
 # MapReduce Implementation
 
 ### Shuffling
-- The Reduce workers read the pairs from disk and sort the pairs.
+- The partitioning function read the pairs from memory, sorts the pairs and stores the sorted partitions into local storage.
+
+- The locations of these buffered pairs are stored in the master and are passed to the Reduce workers.
 <br>
 <br>
-- The sorting operation groups together the same keys, as Reduce workers often get multiple different keys assigned to them.
-<br>
-<br>
-<img src="img/shuffle-step.png" style="width: 330px; height: 300px"/>
+<img src="img/shuffle-step.png" style="width: 300px; height: 270px"/>
 [1]
 
 ---
@@ -250,7 +269,7 @@ On a network with 2,000 machines to get input data split to sizes of between 16M
 # MapReduce Implementation
 
 ### Reducing
-- The Reduce workers read the pairs from disk and sort the pairs.
+- The Reduce workers read the sorted pairs from disk and creates subsets from the pairs.
 <br>
 <br>
 <img src="img/reduce-step.png" style="width: 330px; height: 300px"/>
@@ -303,8 +322,6 @@ These states include:
 - idle
 - in-progress
 - completed
-
-Depending on these worker states and the time that the worker stays in the state, different fault tolerance mechanisms are implemented.
 
 
 ---
@@ -362,7 +379,8 @@ Depending on these worker states and the time that the worker stays in the state
 
 - When a worker fails, the master re-schedules jobs based on the closest machine that has a copy of the original worker data.
 
-- If no machine has an exact copy, the task is reschedule to the nearest machine with input data that best replicates the original.
+<img src="img/locality.png" style="width: 500px; height: 350px"/>
+[3]
 
 
 ---
@@ -392,9 +410,9 @@ Depending on these worker states and the time that the worker stays in the state
 
 - When creating inputs for Reduce tasks, a Partition function can be used to evenly distribute partitions.
 
-- Based on the key/value pair from Map tasks, outputs are assigned to partitions during the Shuffling step of MapReduce.
+- This is the shuffling step of MapReduce.
 
-- *f(key) = hash(key)**mod**R*
+- *partition = hash(key)**mod**R*
 
 ---
 
@@ -555,6 +573,8 @@ Depending on these worker states and the time that the worker stays in the state
 1. http://xiaochongzhang.me/blog/wp-content/uploads/2013/05/MapReduce_Work_Structure.png
 
 2. http://images.slideplayer.com/14/4413895/slides/slide_13.jpg
+
+3. http://www.sis.pitt.edu/bpalan/research.html
 
 
 
