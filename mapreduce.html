@@ -81,8 +81,7 @@ The algorithm needed to be relatively simple to implement and understand, but st
 
 Key  | Value
 ------------- | -------------
-0  | Banana
-1  | Banana
+words.txt | {Banana, Banana}
 
 ### Output
 
@@ -160,19 +159,15 @@ Banana | 2
 ---
 
 # MapReduce Implementation
-### Architecture
-- There are many different implementations of MapReduce for constrasting architectures.
-<br>
-<br>
-- The implementation environment used in the paper is most common application of MapReduce; an environment of thousands of low-end networked computers.
+### Components
+- The MapReduce model uses two main components to carry out commands and to load files for input and to store output.
 
 ---
 
 # MapReduce Implementation
-### Components
-- The MapReduce model uses two main components to carry out commands and to load files for input and to store output.
+  ### Components
 
-<img src="img/master-worker.png" style="width: 600px; height: 350px"/>
+<img src="img/master-worker.png" style="width: 700px; height: 450px"/>
 
 ---
 
@@ -181,9 +176,9 @@ Banana | 2
 Tasks include:
  - assign Map and Reduce tasks to workers
 
- - updates worker status
+ - tracks worker status
 
- - tracks file locations
+ - tracks local file locations from map workers
 
  - handles faults in workers.
 
