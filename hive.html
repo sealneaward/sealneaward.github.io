@@ -117,7 +117,7 @@ class: center, middle
 - HiveQL can only support ANSI JOIN statements.
 
 <br>
-<img src="img/hive-join.png" style="width: 800px; height: 400px"/>
+<img src="img/hive-join.png" style="width: 700px; height: 400px"/>
 
 ???
 
@@ -127,8 +127,6 @@ class: center, middle
 
 - This allows for more customization queries and additional operations like classification, clustering, etc.
 
-<br>
-<br>
 <img src="img/hive-custom-map.png" style="width: 800px; height: 300px"/>
 
 ???
@@ -149,8 +147,6 @@ Note that Hive supports the interchanging of FROM, SELECT, MAP, and REDUCE withi
 
 - Tables are partitioned with custom PARTITIONED BY functions.
 
-<br>
-<img src="img/hive-test-partition.png" style="width: 800px; height: 300px"/>
 ???
 Note that the first partition divides the table into a subset at the date and hour.
 The second partition does the same.
@@ -158,14 +154,14 @@ The second partition does the same.
 ---
 # HDFS
 ### Partitions
-- Partitions can be used to select from tables.
+- Partitions allow Hive to perform queries much faster.
+
+- They enable partition pruning, which will allow Hive to only query sub directories of tables.
 
 <br>
-<br>
-<img src="img/hive-partition-query.png" style="width: 850px; height: 100px"/>
+<img src="img/hive-test-partition.png" style="width: 800px; height: 300px"/>
 ???
-Note that with partitions, the hdfs will only look at that partitions directory.
-With these partitions, pruning allows the file system to perform queries much faster.
+The first creates a partition with data from table t and the second creates and empty partition.
 
 ---
 # HDFS
@@ -206,11 +202,12 @@ The main building blocks of Hive are:
 <br>
 
 - Metastore
-- Driver
+
 - Compiler
-- HiveServer
-- Command Line Interface
-- Serialization Interfaces
+
+- Optimizer
+
+- MapReduce Execution
 
 ---
 
@@ -229,16 +226,138 @@ Without metastore, there is no structure for the data stored in HDFS.
 ---
 
 # System Architecture
-### Query Compiler
-- The compiler takes in the HiveSQL queries and translates the queries into map and reduce tasks.
+### Query Compilation and Optimization
+- The compiler and optimizer takes in the HiveSQL queries and translates them into map and reduce tasks.
 <br>
 <br>
 <img src="img/hive-compiler.png" style="width: 700px; height: 300px"/>
+[1]
 
 ???
-- The compiler uses Antlr to generate syntax trees from queries.
-- The compiler will convert complex and nested queries into parent child relationship query block tree.
-- **** TODO ****
+
+- The analyser transforms the syntax trees into an internal query representation with query blocks.
+- The analyser queries the metastore for information on tables to insert into internal queries.
+- The logical plan generator will take the internal queries and order them in a logical plan in an operation tree.
+- The query plan generator converts the ordered logical plan into a series of map-reduce jobs.
+
+---
+
+# System Architecture - Parser
+<img src="img/hive-example-parse.png" style="width: 750px; height: 150px"/>
+
+[1]
+
+---
+
+# System Architecture - Parser
+<img src="img/hive-parser.png" style="width: 700px; height: 450px"/>
+
+[1]
+???
+- The parser converts queries intox syntax trees.
+
+---
+
+# System Architecture - Semantic Analyzer
+<img src="img/hive-semantic-1.png" style="width: 750px; height: 450px"/>
+
+[1]
+???
+- The analyser transforms the syntax trees into an internal query representation with query blocks.
+
+---
+
+# System Architecture - Semantic Analyzer
+<img src="img/hive-semantic-2.png" style="width: 750px; height: 450px"/>
+
+[1]
+???
+- The analyser transforms the syntax trees into an internal query representation with query blocks.
+
+---
+
+# System Architecture - Semantic Analyzer
+<img src="img/hive-semantic-3.png" style="width: 750px; height: 450px"/>
+
+[1]
+???
+- The analyser transforms the syntax trees into an internal query representation with query blocks.
+
+---
+
+# System Architecture - Logical Plan
+<img src="img/hive-logical-plan.png" style="width: 650px; height: 450px"/>
+
+[1]
+???
+- The logical plan generator will take the internal queries and order them in a logical plan in an operation tree.
+
+
+---
+
+# System Architecture
+### Optimization
+There are several optimization steps that occur to prune the logical plan created by the semantic analyser.
+
+- Column pruning
+
+- Predicate pushdown
+
+- Partition pruning
+
+- Map side joins
+
+???
+-Note predicate pushdown has to deal with the immediate execution of queries as they come in.
+
+---
+
+# System Architecture
+### Optimization - Pruning
+
+- Column pruning ensures that only the specified columns are selected when processing rows.
+
+- Partition pruning ensures that only sub directories of tables are traversed when querying tables.
+
+---
+
+# System Architecture
+### Optimization - Joins
+
+- Map side joins allows the replication of small tables inside of map workers so that the join can be part of mapping.
+
+- Map side joins reduce the load sent to reduce tasks.
+
+---
+
+# System Architecture
+### Optimization - Predicate Pushdown
+
+- Predicate pushdown prioritizes certain operations in a query in order to lessen load.
+
+<img src="img/hive-predicate.png" style="width: 650px; height: 150px"/>
+
+???
+- The WHERE clause is evaluated first on the two tables before the join with predicate pushdown.
+
+---
+
+# System Architecture - Query Plan
+<img src="img/hive-query-plan.png" style="width: 600px; height: 450px"/>
+
+[1]
+???
+- The query plan generator converts the optimized logical plan into a series of map-reduce jobs.
+- The execution engine then takes this plan and executes based on dependencies.
+---
+
+# References
+
+[1] http://www.slideshare.net/recruitcojp/internal-hive
+
+
+
+
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
     </script>
