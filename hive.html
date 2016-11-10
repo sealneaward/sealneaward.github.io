@@ -123,15 +123,60 @@ class: center, middle
 
 ---
 # HiveQL
+### Custom MapReduce
 - HiveQL has support for using custom map and reduce scripts in queries.
 
 - This allows for more customization queries and additional operations like classification, clustering, etc.
 
-<img src="img/hive-custom-map.png" style="width: 800px; height: 300px"/>
+<img src="img/hive-custom-mapreduce.png" style="width: 800px; height: 300px"/>
 
 ???
 Note that Hive also supports clustering operations to reduce the load put on the reduce operations.
 Note that Hive supports the interchanging of FROM, SELECT, MAP, and REDUCE within a sub query.
+
+---
+# HiveQL
+### Custom MapReduce Data
+
+<img src="img/hive-custom-mapreduce-data.png" style="width: 800px; height: 150px"/>
+
+---
+# HiveQL
+### Custom Map
+
+<img src="img/hive-custom-map.png" style="width: 800px; height: 300px"/>
+
+---
+# HiveQL
+### Custom Reduce
+
+<img src="img/hive-custom-reduce.png" style="width: 600px; height: 400px"/>
+???
+
+
+
+---
+# HiveQL
+### Serialization
+- HiveQL supports custom data types with serialization.
+
+- The default serialization is done through LazySerDe.
+
+---
+# HiveQL
+### Serialization
+- SerDe serializes rows into objects.
+
+- In the table definition, HiveQL can specify row, column, list, and map value delimiters for serialization.
+<br>
+<br>
+<img src="img/hive-serialization.png" style="width: 750px; height: 250px"/>
+
+???
+Note that collection items are delimiters for the elements in a list. List items are rows in this case.
+Map keys are delimiters for items in a map.
+
+
 ---
 # HDFS
 - <b>Tables</b>: stored in directory.
@@ -147,9 +192,11 @@ Note that Hive supports the interchanging of FROM, SELECT, MAP, and REDUCE withi
 
 - Tables are partitioned with custom PARTITIONED BY functions.
 
+<br>
+<img src="img/hive-create-partition.png" style="width: 750px; height: 100px"/>
+
 ???
-Note that the first partition divides the table into a subset at the date and hour.
-The second partition does the same.
+Note that the table will be create with partitions existing for every 'date' and 'hour'
 
 ---
 # HDFS
@@ -159,7 +206,7 @@ The second partition does the same.
 - They enable partition pruning, which will allow Hive to only query sub directories of tables.
 
 <br>
-<img src="img/hive-test-partition.png" style="width: 800px; height: 300px"/>
+<img src="img/hive-single-partition.png" style="width: 800px; height: 300px"/>
 ???
 The first creates a partition with data from table t and the second creates and empty partition.
 
@@ -169,30 +216,10 @@ The first creates a partition with data from table t and the second creates and 
 - Buckets can be used to scan files within partitions or tables.
 
 <br>
-<br>
-<img src="img/hive-bucket-query.png" style="width: 800px; height: 100px"/>
+<img src="img/hive-create-buckets.png" style="width: 800px; height: 300px"/>
 ???
 Note that this queries the 2nd bucket file out of the 32 buckets in the table.
----
-# HDFS
-### Serialization
-- HiveQL supports custom data types with serialization.
-
-- The default serialization is done through LazySerDe.
-
----
-# HDFS
-### Serialization
-- SerDe serializes rows into objects.
-
-- In the table definition, HiveQL can specify row, column, list, and map value delimiters for serialization.
-<br>
-<br>
-<img src="img/hive-serialization.png" style="width: 750px; height: 250px"/>
-
-???
-Note that collection items are delimiters for the elements in a list. List items are rows in this case.
-Map keys are delimiters for items in a map.
+Note that these buckets can be used for clustering tables.
 
 ---
 
@@ -243,7 +270,7 @@ Without metastore, there is no structure for the data stored in HDFS.
 ---
 
 # System Architecture - Parser
-<img src="img/hive-example-parse.png" style="width: 750px; height: 150px"/>
+<img src="img/hive-example-parse.png" style="width: 800px; height: 125px"/>
 
 [1]
 
@@ -255,6 +282,9 @@ Without metastore, there is no structure for the data stored in HDFS.
 [1]
 ???
 - The parser converts queries intox syntax trees.
+- The first block is the column selection from the underlying tables
+- The second block contains the destination information for the overwrite operation
+- The third block contains the join information and ON clause information for the two tables.
 
 ---
 
@@ -349,6 +379,20 @@ There are several optimization steps that occur to prune the logical plan create
 ???
 - The query plan generator converts the optimized logical plan into a series of map-reduce jobs.
 - The execution engine then takes this plan and executes based on dependencies.
+---
+
+# Demo
+
+---
+
+# Conclusions
+
+- Hive provides an easy to use query language to extract data from Hadoop MapReduce backends.
+
+- The HDFS with partitions and buckets contribute to faster queries through pruning.
+
+- Outside of pruning, Hive's data structuring and optimization provides a system that performs ~20% faster than traditional Hadoop systems during that time.
+
 ---
 
 # References
