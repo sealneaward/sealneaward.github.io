@@ -32,35 +32,286 @@ class: center, middle
 ---
 
 # Contents
+1. Motivation
+2. Offensive Player Classification
+3. Attempts at Defensive Player Classification
+4. Data
+5. Gaussian Mixture Models
+6. Clustering Methods
+7. Results
+8. Future Works (Disruption and Volumetric Score)
+9. Conclusion
 
-1. Evaluating Players
-2. Contributions of Paper
-3. HiveQL
-4. HDFS
-5. System Architecture
-6. Demo
-7. Conclusions
+---
+
+# Motivation
+- Professional basketball teams need a form of evaluation that accurately depicts playing styles.
+<br>
+<br>
+
+- It is not wise to evaluate players in basketball purely on their box scores.
+<br>
+<br>
+
+- Box scores are not descriptive enough to showcase different play styles across players.
+
+
+---
+
+# Motivation
+
+<img src="img/box-score-comparison.png" style="width: 800px; height: 450px"/>
+
+---
+
+# Motivation
+
+<img src="img/channing-shot-selection.png" style="width: 700px; height: 500px"/>
+
+---
+
+# Motivation
+
+<img src="img/jabari-shot-selection.png" style="width: 700px; height: 500px"/>
+
+
+---
+
+# Offensive Player Classification
+
+- Efforts in the past have largely been focused on offensive skillsets.
+<br/>
+<br/>
+
+- Past classification research has used a variety of advanced statistics that help fill gaps that box scores cannot fill.
+<br/>
+<br/>
+
+
+---
+
+# Offensive Player Classification
+### Metrics Used
+
+1. Percent of assists on field goals made
+
+2. Assists per possession
+
+3. Turnovers per possesion
+
+4. Defensive rebound rate
+
+5. Offensive rebound rate
+
+6. Zone shooting
+
+
+---
+
+# Offensive Player Classification
+
+- Using traditional clustering methods like k-means, accurate descriptions of offensive play style can be made.
+
+<img src="img/offensive-cluster-1.png" style="width: 800px; height: 350px"/>
+
+---
+
+# Offensive Player Classification
+
+<img src="img/offensive-cluster-2.png" style="width: 800px; height: 350px"/>
+
+---
+
+# Defensive Player Classification Attempts
+
+- One of the major areas of research within the basketball analytic community has been quantifying defensive skill.
+<br>
+<br>
+
+- Early classification of players used metrics that largely focused on offensive performance.
+<br>
+<br>
+
+- Measuring defensive impact is much harder to do than measuring offensive impact.
+
+
+---
+
+# Defensive Player Classification Attempts
+
+- One attempt at defensive player classification was using closest defender during time of shot.
+
+
+- Although the idea of tracking defenders of shots is a good idea for defensive measurement, it can present bias.
+
+<img src="img/closest-defender.jpg" style="width: 700px; height: 350px"/>
+
+---
+
+# Defensive Player Classification Attempts
+
+- The closest player at time of shot is not always the player that was actually guarding the player.
+
+<img src="img/guarding-player.jpg" style="width: 700px; height: 400px"/>
+
+---
+
+# Defensive Player Classification Attempts
+
+<img src="img/non-guarding-player.jpg" style="width: 700px; height: 400px"/>
+
+---
+
+# Data
+
+- Available data has exploded over the past four years with the introduction of SportVU cameras within arenas.
+
+- SportVU cameras track the XY positions of all ten players on court, as well as the XYZ positions of the ball for 25 frames per second.
+
+<img src="img/GSWatPORnocommentary.gif" style="width: 650px; height: 350px"/>
+
+---
+
+# Data
+
+- Recently, the NBA has released advanced defensive metrics that allow researchers the ability to gain advanced insight into play styles on defense.
+
+These metrics include:
+
+1. Contested shots
+
+2. Charges drawn
+
+3. Deflections
+
+4. Loose ball recovered
+
+5. Screen assists
+
+6. Opponent field goal percentage by zone
+
+7. Speed on defense
 
 ---
 
 # Gaussian Mixture Models
 
+- In the defensive classification model, the number of defensive positions cannot be assumed.
+<br>
+<br>
+
+- In clustering, when the number of clusters is not known, Gaussian Mixtures and the Expectation Maximization algorithm can be used to find the optimal number of clusters.
+
+---
+
+# Gaussian Mixture Models
+### Chinese Restaurant Process
+
+- A chinese restaurant has an infinite amount of tables for customers to be seated at.
+
+<img src="img/initial-seating.png" style="width: 700px; height: 350px"/>
+
+
+https://www.cs.princeton.edu/courses/archive/fall07/cos597C/scribe/20070921.pdf
+
+---
+
+# Gaussian Mixture Models
+### Chinese Restaurant Process
+
+Rules:
+1. The first customer always sits at the first table.
+
+2. The ***n + 1*** customer has two options:
+
+  - Sit on the first unoccupied table with probability <img src="img/unoccupied-table.png" style="width: 400px; height: 75px"/>
+  - Sit at an occupied table with probability <img src="img/occupied-table.png" style="width: 300px; height: 75px"/>
+
+---
+
+# Gaussian Mixture Models
+### Chinese Restaurant Process
+
+- ***a*** is the dispersion value of the restaurant population distribution over the entirety of the populated tables.
+
+- ***a*** can be used as a probability distribution of a **mixture** of probability functions.
+
+- Each probability distribution would represent each **table** in the restaurant.
+
+---
+
+# Gaussian Mixture Models
+
+- A convex function can be created to represent the join probability functions in a mixture.
+
+- These probability functions represent the potential defensive clusters that players can be in.
+
+<img src="img/mixture-probabilities.png" style="width: 700px; height: 350px"/>
+
+---
+
+# Gaussian Mixture Models
+
+- As points are assigned to clusters, weights associated with the distribution of the clusters are updated and factored into the convex function under a process called ***Expectation Maximization***.
+
+<img src="img/em-weights.gif" style="width: 700px; height: 400px"/>
+
+---
+
+# Gaussian Mixture Models
+
+- The distribution weights will be updated untill convergence.
+
+<img src="img/em-new-cluster.gif" style="width: 600px; height: 425px"/>
+
+---
+
+# Defensive Classification
+
+---
+
+# Gaussian Mixture Models
+https://www.youtube.com/watch?v=qMTuMa86NzU
+http://scikit-learn.org/stable/modules/mixture.html
+http://www.kyb.tue.mpg.de/fileadmin/user_upload/files/publications/pdfs/pdf2299.pdf
 ???
 
 ---
 
 # Expectation Maximization
+https://www.youtube.com/watch?v=qMTuMa86NzU
+http://scikit-learn.org/stable/modules/mixture.html#expectation-maximization
+http://cs229.stanford.edu/notes/cs229-notes8.pdf
 
 ???
 
 ---
 
 # Dirichlet Process
+https://www.youtube.com/watch?v=qMTuMa86NzU
+http://scikit-learn.org/stable/modules/mixture.html#the-dirichlet-process
+http://www.cs.cmu.edu/~./kbe/dp_tutorial.pdf
+
+- Chinese Restaurant Example
+https://www.cs.princeton.edu/courses/archive/fall07/cos597C/scribe/20070921.pdf
 
 ???
 ---
 # Clustering Methods
-### Custom Map
+### K-Means
+http://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_digits.html
+
+
+---
+# Clustering Methods
+### DBScan
+http://scikit-learn.org/stable/auto_examples/cluster/plot_dbscan.html
+
+---
+# Clustering Methods
+### HierArchial
+http://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html#sklearn.cluster.AgglomerativeClustering
+http://scikit-learn.org/stable/auto_examples/cluster/plot_digits_linkage.html#sphx-glr-auto-examples-cluster-plot-digits-linkage-py
 
 <img src="img/hive-custom-map.png" style="width: 800px; height: 300px"/>
 
