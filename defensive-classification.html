@@ -139,7 +139,7 @@ class: center, middle
 
 # Defensive Player Classification Attempts
 
-- One attempt at defensive player classification was using closest defender during time of shot.
+- One attempt at defensive player classification was using closest defender during time of shot to estimate defensive shooting percentage.
 
 
 - Although the idea of tracking defenders of shots is a good idea for defensive measurement, it can present bias.
@@ -180,17 +180,17 @@ These metrics include:
 
 1. Contested shots
 
-2. Charges drawn
+2. Deflections
 
-3. Deflections
+3. Loose ball recovered
 
-4. Loose ball recovered
+5. Opponent field goal percentage by zone
+<br>
+<br>
+<br>
 
-5. Screen assists
-
-6. Opponent field goal percentage by zone
-
-7. Speed on defense
+???
+Along with these, traditional metrics will be used.
 
 ---
 
@@ -202,6 +202,12 @@ These metrics include:
 
 - In clustering, when the number of clusters is not known, Gaussian Mixtures and the Expectation Maximization algorithm can be used to find the optimal number of clusters.
 
+???
+# Gaussian Mixture Models
+https://www.youtube.com/watch?v=qMTuMa86NzU
+http://scikit-learn.org/stable/modules/mixture.html
+http://www.kyb.tue.mpg.de/fileadmin/user_upload/files/publications/pdfs/pdf2299.pdf
+
 ---
 
 # Gaussian Mixture Models
@@ -211,7 +217,11 @@ These metrics include:
 
 <img src="img/initial-seating.png" style="width: 700px; height: 350px"/>
 
-
+???
+# Expectation Maximization
+https://www.youtube.com/watch?v=qMTuMa86NzU
+http://scikit-learn.org/stable/modules/mixture.html#expectation-maximization
+http://cs229.stanford.edu/notes/cs229-notes8.pdf
 https://www.cs.princeton.edu/courses/archive/fall07/cos597C/scribe/20070921.pdf
 
 ---
@@ -226,6 +236,10 @@ Rules:
 
   - Sit on the first unoccupied table with probability <img src="img/unoccupied-table.png" style="width: 400px; height: 75px"/>
   - Sit at an occupied table with probability <img src="img/occupied-table.png" style="width: 300px; height: 75px"/>
+
+???
+  - Chinese Restaurant Example
+  https://www.cs.princeton.edu/courses/archive/fall07/cos597C/scribe/20070921.pdf
 
 ---
 
@@ -268,46 +282,128 @@ Rules:
 
 # Defensive Classification
 
+When applying the Gaussian Mixture Model, I decided to subset the data used into three sections that related to specific skillsets:
+<br>
+<br>
+
+- Defense in the five shooting zones
+<br>
+<br>
+
+- Ability to contest and block shots
+<br>
+<br>
+
+- Repossesion metrics
+
 ---
 
-# Gaussian Mixture Models
-https://www.youtube.com/watch?v=qMTuMa86NzU
-http://scikit-learn.org/stable/modules/mixture.html
-http://www.kyb.tue.mpg.de/fileadmin/user_upload/files/publications/pdfs/pdf2299.pdf
+# Defensive Classification
+### Zone Defense TODO
+Consists of only two clusters SO FAR
+
+<img src="img/zone_cluster.jpg" style="width: 500px; height: 325px"/>
+
+---
+
+# Defensive Classification
+### Contesting Shots
+Using five clusters these defensive play types become apparent:
+
+- Skilled at contesting in the paint and getting blocks
+<br>
+
+- Average paint defender
+<br>
+
+- Exceeds at defending the three point line and getting deflections
+<br>
+
+- No effort defense
+<br>
+
+- Average defender
+---
+
+# Defensive Classification
+### Contesting Shots
+
+<img src="img/contest_cluster.jpg" style="width: 600px; height: 450px"/>
+
+---
+
+# Defensive Classification
+### Reposession Skills
+Using four clusters these defensive play types become apparent:
+
+- Blocking and defensive rebound machine
+<br>
+
+- Ball thief
+<br>
+
+- Below average at all repossesion skills
+<br>
+
+- Average defender
+
+
+---
+
+# Defensive Classification
+### Reposession Skills
+
+<img src="img/handle_cluster.jpg" style="width: 600px; height: 450px"/>
+
+---
+# Future Works
+### Advanced Defensive Metrics
+
+To gain a better insight into how well players guard during their possession, volumetric and disruption scores can be used.
+
+- **Volumetric Score**: ability to alter the frequency of an opponent's shot against exptected frequency
+
+- **Disruption Score**: ability to alter the shooting percentage of opponent's shot against expected percentage
+
+---
+# Future Works
+### Advanced Defensive Metrics
+
+- Using these two metrics, defensive shots charts can be created.
+
+<img src="img/hardebn-defense.png" style="width: 500px; height: 350px"/>
+
+---
+# Future Works
+### Advanced Defensive Metrics
+
+- These metrics allow researchers to quantify exactly how bad a defender is, and pinpoint their weak and strong areas.
+
+<img src="img/kawhi-defense.png" style="width: 500px; height: 350px"/>
+
+---
+# Conclusion
+
+- Previous player classifications ignored defensive skills in evaluations.
+<br>
+<br>
+
+- Gaussian Mixture Models are useful at estimating number of clusters in mixed probability distributions.
+<br>
+<br>
+
+- Unrelated defensive skills should be evaluated seperately to eliminate sparsity in cluster distributions.
+<br>
+<br>
+
+- The defensive metrics collected over the playoffs allow a clear description to be made for defensive evaluations.
+
+
 ???
-
----
-
-# Expectation Maximization
-https://www.youtube.com/watch?v=qMTuMa86NzU
-http://scikit-learn.org/stable/modules/mixture.html#expectation-maximization
-http://cs229.stanford.edu/notes/cs229-notes8.pdf
-
-???
-
----
-
-# Dirichlet Process
-https://www.youtube.com/watch?v=qMTuMa86NzU
-http://scikit-learn.org/stable/modules/mixture.html#the-dirichlet-process
-http://www.cs.cmu.edu/~./kbe/dp_tutorial.pdf
-
-- Chinese Restaurant Example
-https://www.cs.princeton.edu/courses/archive/fall07/cos597C/scribe/20070921.pdf
-
-???
----
-# Clustering Methods
-### K-Means
-http://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_digits.html
-
-
----
 # Clustering Methods
 ### DBScan
 http://scikit-learn.org/stable/auto_examples/cluster/plot_dbscan.html
 
----
 # Clustering Methods
 ### HierArchial
 http://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html#sklearn.cluster.AgglomerativeClustering
@@ -319,7 +415,7 @@ http://scikit-learn.org/stable/auto_examples/cluster/plot_digits_linkage.html#sp
 
 # References
 
-[1] http://www.slideshare.net/recruitcojp/internal-hive
+[1] 
 
 
 
