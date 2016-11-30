@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Title</title>
+    <title>Defensive Player Classification</title>
     <meta charset="utf-8">
     <style>
       @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
@@ -194,6 +194,24 @@ Along with these, traditional metrics will be used.
 
 ---
 
+# Data
+### Normalizing Metrics
+
+- Because not all players play the same amount of time in a game, the metrics need to be distributed over a set time period.
+<br>
+<br>
+
+- Each metric is calculated per 40 minutes.
+<br>
+<br>
+
+- Each metric is normalized to it's respective means.
+<br>
+<br>
+
+- Blocks and contest metrics need to be compared to the number of field goal attempts made.
+---
+
 # Gaussian Mixture Models
 
 - In the defensive classification model, the number of defensive positions cannot be assumed.
@@ -280,80 +298,62 @@ Rules:
 
 ---
 
-# Defensive Classification
+# Defensive Player Classification
 
-When applying the Gaussian Mixture Model, I decided to subset the data used into three sections that related to specific skillsets:
-<br>
-<br>
+Using these metrics:
 
-- Defense in the five shooting zones
-<br>
-<br>
+1. Contested 2 Point Shots VS 2 Point Shot Attempts
 
-- Ability to contest and block shots
-<br>
-<br>
+2. Contested 3 Point Shots VS 3 Point Shot Attempts
 
-- Repossesion metrics
+3. Blocked Shots VS All Shot Attempts
 
----
+4. Deflections
 
-# Defensive Classification
-### Zone Defense
-These metrics present bias towards certain types of players, making other players appear more effecient in certain zones than others.
+5. Steals
 
-<img src="img/zone_cluster.png" style="width: 500px; height: 325px"/>
+6. Loose Balls Recovered
+
+7. Defensive Rebounds
+
+8. Average Speed on Defense
 
 ---
 
-# Defensive Classification
-### Contesting Shots
-Using five clusters these defensive play types become apparent:
+# Defensive Player Classification
 
-- Skilled at contesting in the paint and getting blocks
-<br>
+- The Gaussian Mixture Model found that 5 clusters of defensive player types were optimal
 
-- Average paint defender
-<br>
-
-- Exceeds at defending the three point line and getting deflections
-<br>
-
-- No effort defense
-<br>
-
-- Average defender
----
-
-# Defensive Classification
-### Contesting Shots
-
-<img src="img/contest_cluster.png" style="width: 600px; height: 450px"/>
+<img src="img/overall_cluster_number.png" style="width: 800px; height: 425px"/>
 
 ---
 
-# Defensive Classification
-### Reposession Skills
-Using four clusters these defensive play types become apparent:
+# Defensive Player Classification
 
-- Blocking and defensive rebound machine
-<br>
+After clustering, five defensive playing types are present:
 
-- Ball thief
-<br>
+1. Elite Rim Protecter (Andrew Bogut)
 
-- Below average at all repossesion skills
-<br>
+2. Rim Protector (Lamarcus Aldridge)
 
-- Average defender
+3. Elite Wing Defender (Kawhi Leonard)
 
+4. Perimeter Defender (Klay Thompson)
 
+5. Ball Thief (Kyrie Irving)
+
+???
+1. High block per shot, high defensive rebound rate, high contest in paint
+2. Contest two and three higher than average, bit faster on defense.
+3. Fast on defense, high steal and deflections, high contest on 3 pt shot, gets drebs.
+4. Contests three point shots and that's about it
+5. Steals ball, recovers loose balls, gets deflections (all not at elite level though)
 ---
 
-# Defensive Classification
-### Reposession Skills
+# Defensive Player Classification
 
-<img src="img/handle_cluster.png" style="width: 600px; height: 450px"/>
+<img src="img/overall_cluster.png" style="width: 800px; height: 500px"/>
+
 
 ---
 # Future Works
@@ -399,23 +399,17 @@ To gain a better insight into how well players guard during their possession, vo
 - The defensive metrics collected over the playoffs allow a clear description to be made for defensive evaluations.
 
 
-???
-# Clustering Methods
-### DBScan
-http://scikit-learn.org/stable/auto_examples/cluster/plot_dbscan.html
-
-# Clustering Methods
-### HierArchial
-http://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html#sklearn.cluster.AgglomerativeClustering
-http://scikit-learn.org/stable/auto_examples/cluster/plot_digits_linkage.html#sphx-glr-auto-examples-cluster-plot-digits-linkage-py
-
-<img src="img/hive-custom-map.png" style="width: 800px; height: 300px"/>
-
 ---
 
 # References
 
-[1]
+[1] http://www.ee.iisc.ac.in/people/faculty/prasantg/downloads/GMM_Tutorial_Reynolds.pdf
+
+[2] http://nyloncalculus.com/2015/09/29/nba-positions-by-clustering/
+
+[3] http://www.sloansportsconference.com/wp-content/uploads/2012/02/44-Lutz_cluster_analysis_NBA.pdf
+
+[4] https://www.cs.princeton.edu/courses/archive/fall07/cos597C/scribe/20070921.pdf
 
 
 
